@@ -18,10 +18,9 @@ public class Square extends JPanel implements MouseListener {
 	
 	private Timer timer;
 	private boolean charging, pulsing;
-	private boolean pulseUp, toggle;
+	private boolean pulseUp;
 	private int timerCycles;
 	private int power, pulse;
-	private double pulseUpTo;
 	private int row, column;
 	
 	private PulseDelegate pulseDelegate;
@@ -71,7 +70,7 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public void updatePower() {
-		power = (int) scale(timerCycles, 0, BoardPanel.CYCLE_DURATION, 0, MAX_POWER);
+		power = (int)scale(timerCycles, 0, BoardPanel.CYCLE_DURATION, 0, MAX_POWER);
 		repaint();
 	}
 	
@@ -90,26 +89,23 @@ public class Square extends JPanel implements MouseListener {
 			}
 		}
 		
-		if (!toggle && power != 0 && pulse / power > MAX_PULSE_PERCENT) {
+		repaint();
+//		System.out.println("("+column+", "+row+") Power: "+power+" Pulse: "+pulse+" Pulse Up: "+pulseUp);
+		
+		//Hit the max pulse we are allowed, start going down...
+		if (power != 0 && pulse / power > MAX_PULSE_PERCENT) {
 			pulseUp = false;
 			pulseDelegate.pulseOccurred(this);
-		} else if (toggle && pulse >= pulseUpTo) {
-			pulseUp = false;
+		} else if (power == 0 && pulse != 0) {
 			pulseDelegate.pulseOccurred(this);
 		}
 		
-		if (pulse <= 0 && !toggle) {
+		//Pulse is over
+		if (pulse <= 0) {
 			pulse = 0;
 			pulsing = false;
 			pulseUp = true;
-		} else if (pulse + power <= 0 && toggle) {
-			power = 0;
-			pulse = 0;
-			pulsing = false;
-			pulseUp = true;
-			toggle = false;
 		}
-		repaint();
 	}
 	
 	public void timerFired() {
@@ -130,14 +126,11 @@ public class Square extends JPanel implements MouseListener {
 		return scaled;
 	}
 	
-	public void toggleWithPulse(int pulse) {
+	public void dieWithPulse(int pulse) {
 		if (power == 0) {
-			this.pulse = 0;
-			this.power = pulse;
-			pulseUpTo = pulse;
-			toggle = true;
+			this.pulse = pulse;
 			pulsing = true;
-			pulseUp = true;
+			pulseUp = false;
 		}
 	}
 	
@@ -155,6 +148,10 @@ public class Square extends JPanel implements MouseListener {
 	
 	public int getPower() {
 		return power;
+	}
+	
+	public int getPulse() {
+		return pulse;
 	}
 	
 	public boolean isPulsing() {

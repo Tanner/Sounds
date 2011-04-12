@@ -9,8 +9,9 @@ import javax.swing.Timer;
 
 public class BoardPanel extends JPanel implements ActionListener, PulseDelegate {
 	private static final int NUM_OF_SQUARES = 20;
+	private static final double PULSE_DECAY = 0.1;
+
 	public static final int CYCLE_DURATION = 50;
-	private static final double PULSE_DECAY = 0.25;
 	
 	private Square[][] board;
 	private Timer timer;
@@ -49,27 +50,32 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		int r = source.getRow();
 		int c = source.getColumn();
 		
-		int pulsePower = (int)(source.getPower() - Math.ceil(source.getPower() * PULSE_DECAY));
+		int pulsePower = (int)(source.getPower() + source.getPulse());
+		pulsePower = (int)(pulsePower - Math.ceil(pulsePower * PULSE_DECAY));
+
+//		System.out.println("Pulse Occured at ("+c+", "+r+") with Power "+pulsePower);
 		
-		//Top Left Corner
-		if (r - 1 >= 0 && !board[r - 1][c].isPulsing())
-			board[r - 1][c].toggleWithPulse(pulsePower);
-		if (c - 1 >= 0 && !board[r][c - 1].isPulsing())
-			board[r][c - 1].toggleWithPulse(pulsePower);
-		if (r - 1 >= 0 && c - 1 >= 0 && !board[r - 1][c - 1].isPulsing())
-			board[r - 1][c - 1].toggleWithPulse(pulsePower);
-		
-		//Bottom Right Corner
-		if (r + 1 < NUM_OF_SQUARES && !board[r + 1][c].isPulsing())
-			board[r + 1][c].toggleWithPulse(pulsePower);
-		if (c + 1 < NUM_OF_SQUARES && !board[r][c + 1].isPulsing())
-			board[r][c + 1].toggleWithPulse(pulsePower);
-		if (r + 1 < NUM_OF_SQUARES && c + 1 < NUM_OF_SQUARES && !board[r + 1][c + 1].isPulsing())
-			board[r + 1][c + 1].toggleWithPulse(pulsePower);
-		
-		if (r + 1 < NUM_OF_SQUARES && c - 1 >= 0 && !board[r + 1][c - 1].isPulsing())
-			board[r + 1][c - 1].toggleWithPulse(pulsePower);
-		if (r - 1 >= 0 && c + 1 < NUM_OF_SQUARES && !board[r - 1][c + 1].isPulsing())
-			board[r - 1][c + 1].toggleWithPulse(pulsePower);
+		if (pulsePower > 0) {
+			//Top Left Corner
+			if (r - 1 >= 0 && !board[r - 1][c].isPulsing())
+				board[r - 1][c].dieWithPulse(pulsePower);
+			if (c - 1 >= 0 && !board[r][c - 1].isPulsing())
+				board[r][c - 1].dieWithPulse(pulsePower);
+			if (r - 1 >= 0 && c - 1 >= 0 && !board[r - 1][c - 1].isPulsing())
+				board[r - 1][c - 1].dieWithPulse(pulsePower);
+			
+			//Bottom Right Corner
+			if (r + 1 < NUM_OF_SQUARES && !board[r + 1][c].isPulsing())
+				board[r + 1][c].dieWithPulse(pulsePower);
+			if (c + 1 < NUM_OF_SQUARES && !board[r][c + 1].isPulsing())
+				board[r][c + 1].dieWithPulse(pulsePower);
+			if (r + 1 < NUM_OF_SQUARES && c + 1 < NUM_OF_SQUARES && !board[r + 1][c + 1].isPulsing())
+				board[r + 1][c + 1].dieWithPulse(pulsePower);
+			
+			if (r + 1 < NUM_OF_SQUARES && c - 1 >= 0 && !board[r + 1][c - 1].isPulsing())
+				board[r + 1][c - 1].dieWithPulse(pulsePower);
+			if (r - 1 >= 0 && c + 1 < NUM_OF_SQUARES && !board[r - 1][c + 1].isPulsing())
+				board[r - 1][c + 1].dieWithPulse(pulsePower);
+		}
 	}
 }
