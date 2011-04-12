@@ -129,12 +129,14 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public void toggleWithPulse(int pulse) {
-		this.pulse = 0;
-		this.power = pulse;
-		pulseUpTo = pulse;
-		toggle = true;
-		pulsing = true;
-		pulseUp = true;
+		if (power == 0) {
+			this.pulse = 0;
+			this.power = pulse;
+			pulseUpTo = pulse;
+			toggle = true;
+			pulsing = true;
+			pulseUp = true;
+		}
 	}
 	
 	public void setPulseDelegate(PulseDelegate pd) {
