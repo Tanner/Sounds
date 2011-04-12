@@ -1,3 +1,3 @@
 public interface PulseDelegate {
-	public void pulseOccured(Square source);
+	public void pulseOccurred(Square source);
 }

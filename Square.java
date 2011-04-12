@@ -90,10 +90,10 @@ public class Square extends JPanel implements MouseListener {
 		
 		if (!toggle && power != 0 && pulse / power > MAX_PULSE_PERCENT) {
 			pulseUp = false;
-			pulseDelegate.pulseOccured(this);
+			pulseDelegate.pulseOccurred(this);
 		} else if (toggle && pulse >= pulseUpTo) {
 			pulseUp = false;
-			pulseDelegate.pulseOccured(this);
+			pulseDelegate.pulseOccurred(this);
 		}
 		
 		if (pulse <= 0 && !toggle) {
