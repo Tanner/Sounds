@@ -57,8 +57,10 @@ public class Square extends JPanel implements MouseListener {
 	public void mouseExited(MouseEvent arg0) { }
 	
 	public void mousePressed(MouseEvent arg0) {
-		timerCycles = 0;
-		charging = true;
+		if (power == 0) {
+			timerCycles = 0;
+			charging = true;
+		}
 	}
 	
 	public void mouseReleased(MouseEvent arg0) {
