@@ -43,6 +43,12 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 					board[r][c].timerFired();
 				}
 			}
+			
+			for (int r = 0; r < NUM_OF_SQUARES; r++) {
+				for (int c = 0; c < NUM_OF_SQUARES; c++) {
+					board[r][c].repaint();
+				}
+			}
 		}
 	}
 	

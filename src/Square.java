@@ -90,8 +90,6 @@ public class Square extends JPanel implements MouseListener {
 			pulsing = false;
 			pulseUp = true;
 		}
-		
-		repaint();
 	}
 	
 	public void timerFired() {
