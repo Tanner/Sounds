@@ -1,7 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -72,10 +70,18 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public void pulse() {
-		if (pulseUp) {
-			pulse += power * PULSE_STEP_UP_PERCENT;
+		if (power != 0) {
+			if (pulseUp) {
+				pulse += power * PULSE_STEP_UP_PERCENT;
+			} else {
+				pulse -= power * PULSE_STEP_UP_PERCENT;
+			}
 		} else {
-			pulse -= power * PULSE_STEP_UP_PERCENT;
+			if (pulseUp) {
+				pulse += pulse * PULSE_STEP_UP_PERCENT;
+			} else {
+				pulse -= pulse * PULSE_STEP_UP_PERCENT;
+			}
 		}
 				
 		//Hit the max pulse we are allowed, start going down...
@@ -104,6 +110,14 @@ public class Square extends JPanel implements MouseListener {
 		}
 	}
 	
+	public void pulseDown(int pulse) {
+		this.pulse = pulse;
+		pulsing = true;
+		pulseUp = false;
+		
+		pulseDelegate.pulseOccurred(this);
+	}
+	
 	private static double scale(double current, double currentMin, double currentMax, double targetMin, double targetMax) {
 		double scaled = targetMin + (targetMax - targetMin) * ((current - currentMin) / (currentMax - currentMin));
 		
@@ -130,8 +144,16 @@ public class Square extends JPanel implements MouseListener {
 		return power;
 	}
 	
+	public void setPulse(int pulse) {
+		this.pulse = pulse;
+	}
+	
 	public int getPulse() {
 		return pulse;
+	}
+	
+	public void setPulsing(boolean pulsing) {
+		this.pulsing = pulsing;
 	}
 	
 	public boolean isPulsing() {

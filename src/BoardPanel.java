@@ -53,6 +53,9 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 	}
 	
 	public void pulseOccurred(Square source) {
-		//
+		int r = source.getRow();
+		int c = source.getColumn();
+		
+		board[r][c + 1].pulseDown(source.getPower());
 	}
 }
