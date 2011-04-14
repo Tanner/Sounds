@@ -23,6 +23,8 @@ public class Square extends JPanel implements MouseListener {
 	private int power, pulse;
 	private int row, column;
 	
+	private boolean waitUntilNextCycle;
+	
 	private PulseDelegate pulseDelegate;
 	
 	public Square(int r, int c) {
@@ -89,7 +91,6 @@ public class Square extends JPanel implements MouseListener {
 			}
 		}
 		
-		repaint();
 //		System.out.println("("+column+", "+row+") Power: "+power+" Pulse: "+pulse+" Pulse Up: "+pulseUp);
 		
 		//Hit the max pulse we are allowed, start going down...
@@ -106,6 +107,8 @@ public class Square extends JPanel implements MouseListener {
 			pulsing = false;
 			pulseUp = true;
 		}
+		
+		repaint();
 	}
 	
 	public void timerFired() {
@@ -115,8 +118,12 @@ public class Square extends JPanel implements MouseListener {
 			updatePower();
 		}
 		
-		if (pulsing) {
+		if (pulsing && !waitUntilNextCycle) {
 			pulse();
+		}
+		
+		if (waitUntilNextCycle) {
+			waitUntilNextCycle = false;
 		}
 	}
 	
@@ -134,6 +141,10 @@ public class Square extends JPanel implements MouseListener {
 		}
 	}
 	
+	public void waitUntilNextCycle() {
+		waitUntilNextCycle = true;
+	}
+	
 	public void setPulseDelegate(PulseDelegate pd) {
 		pulseDelegate = pd;
 	}
@@ -144,6 +155,10 @@ public class Square extends JPanel implements MouseListener {
 	
 	public int getColumn() {
 		return column;
+	}
+	
+	public void setPower(int power) {
+		this.power = power;
 	}
 	
 	public int getPower() {
