@@ -1,29 +1,24 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 public class Square extends JPanel implements MouseListener {
 	private static final Color defaultColor = new Color(0, 0, 0);
 	private static final Color activeColor = new Color(127, 127, 127);
 	private static int MAX_POWER = 1000;
-	private static double MAX_PULSE_PERCENT = 0.50;
+	private static double MAX_PULSE_PERCENT = 1.0;
 	private static double PULSE_STEP_UP_PERCENT = 0.10;
 	
-	private Timer timer;
 	private boolean charging, pulsing;
 	private boolean pulseUp;
 	private int timerCycles;
 	private int power, pulse;
 	private int row, column;
-	
-	private boolean waitUntilNextCycle;
 	
 	private PulseDelegate pulseDelegate;
 	
@@ -77,27 +72,15 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public void pulse() {
-		if (power != 0) {
-			if (pulseUp) {
-				pulse += power * PULSE_STEP_UP_PERCENT;
-			} else {
-				pulse -= power * PULSE_STEP_UP_PERCENT;
-			}
+		if (pulseUp) {
+			pulse += power * PULSE_STEP_UP_PERCENT;
 		} else {
-			if (pulseUp) {
-				pulse += Math.ceil(pulse * PULSE_STEP_UP_PERCENT);
-			} else {
-				pulse -= Math.ceil(pulse * PULSE_STEP_UP_PERCENT);
-			}
+			pulse -= power * PULSE_STEP_UP_PERCENT;
 		}
-		
-//		System.out.println("("+column+", "+row+") Power: "+power+" Pulse: "+pulse+" Pulse Up: "+pulseUp);
-		
+				
 		//Hit the max pulse we are allowed, start going down...
 		if (power != 0 && pulse / power > MAX_PULSE_PERCENT) {
 			pulseUp = false;
-			pulseDelegate.pulseOccurred(this);
-		} else if (power == 0 && pulse != 0) {
 			pulseDelegate.pulseOccurred(this);
 		}
 		
@@ -118,12 +101,8 @@ public class Square extends JPanel implements MouseListener {
 			updatePower();
 		}
 		
-		if (pulsing && !waitUntilNextCycle) {
+		if (pulsing) {
 			pulse();
-		}
-		
-		if (waitUntilNextCycle) {
-			waitUntilNextCycle = false;
 		}
 	}
 	
@@ -131,18 +110,6 @@ public class Square extends JPanel implements MouseListener {
 		double scaled = targetMin + (targetMax - targetMin) * ((current - currentMin) / (currentMax - currentMin));
 		
 		return scaled;
-	}
-	
-	public void dieWithPulse(int pulse) {
-		if (power == 0) {
-			this.pulse = pulse;
-			pulsing = true;
-			pulseUp = false;
-		}
-	}
-	
-	public void waitUntilNextCycle() {
-		waitUntilNextCycle = true;
 	}
 	
 	public void setPulseDelegate(PulseDelegate pd) {
