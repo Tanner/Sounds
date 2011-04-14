@@ -9,7 +9,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Square extends JPanel implements MouseListener {
+public class Square extends JPanel implements MouseListener, Runnable {
 	private static final Color defaultColor = new Color(0, 0, 0);
 	private static final Color activeColor = new Color(127, 127, 127);
 	private static int MAX_POWER = 1000;
@@ -108,6 +108,21 @@ public class Square extends JPanel implements MouseListener {
 		}
 	}
 	
+	public void run() {
+		while (true) {
+			timerFired();
+			
+			synchronized (this) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public void timerFired() {
 		timerCycles++;
 		
@@ -128,6 +143,15 @@ public class Square extends JPanel implements MouseListener {
 	
 	public void dieWithPulse(int pulse) {
 		if (power == 0) {
+			synchronized (this) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			this.pulse = pulse;
 			pulsing = true;
 			pulseUp = false;

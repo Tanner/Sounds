@@ -25,6 +25,7 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 			for (int c = 0; c < NUM_OF_SQUARES; c++) {
 				board[r][c] = new Square(r, c);
 				board[r][c].setPulseDelegate(this);
+				new Thread(board[r][c], "Square at ("+c+", "+r+")").start();
 				add(board[r][c]);
 			}
 		}
@@ -40,7 +41,10 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		if (event.getSource() == timer) {
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
-					board[r][c].timerFired();
+					synchronized (board[r][c]) {
+						board[r][c].notify();
+					}
+					//board[r][c].timerFired();
 				}
 			}
 		}
