@@ -10,8 +10,9 @@ import javax.swing.Timer;
 public class BoardPanel extends JPanel implements ActionListener, PulseDelegate {
 	private static final int NUM_OF_SQUARES = 20;
 	private static final double PULSE_DECAY = 0.1;
-
-	public static final int CYCLE_DURATION = 50;
+	public static final boolean DEBUG = false;
+	
+	public static final int CYCLE_DURATION = 500;
 	
 	private Square[][] board;
 	private Timer timer;
@@ -34,18 +35,21 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		
 		setBackground(Color.GREEN);
 		setPreferredSize(new Dimension(500, 500));
+		
+		board[10][10].setPower(2000);
+		pulseOccurred(board[10][10]);
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == timer) {
-			System.out.println("------------ Timer fired!");
+			if (DEBUG) System.out.println("------------ Timer fired!");
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
 					board[r][c].timerFired();
 				}
 			}
 
-			System.out.println("------------ Timer painting!");
+			if (DEBUG) System.out.println("------------ Timer painting!");
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
 					board[r][c].repaint();
@@ -61,11 +65,26 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		int pulsePower = source.getPower() + source.getPulse();
 		pulsePower -= pulsePower * PULSE_DECAY;
 		
-		System.out.println("------------ Pulse Occurred - ("+c+", "+r+") pow: "+pulsePower);
+		if (DEBUG) System.out.println("------------ Pulse Occurred - ("+c+", "+r+") pow: "+pulsePower);
 		
 		if (pulsePower > 0) {
-			if (c + 1 < NUM_OF_SQUARES) {
-				board[r][c + 1].pulseDown(pulsePower);
+			doPulse(r, c + 1, pulsePower);
+			doPulse(r, c - 1, pulsePower);
+			doPulse(r + 1, c, pulsePower);
+			doPulse(r - 1, c, pulsePower);
+//			doPulse(r + 1, c - 1, pulsePower);
+//			doPulse(r - 1, c + 1, pulsePower);
+			
+			//Corner
+//			doPulse(r + 1, c + 1, pulsePower);
+//			doPulse(r - 1, c - 1, pulsePower);
+		}
+	}
+	
+	public void doPulse(int r, int c, int pulsePower) {
+		if (r >= 0 && r < NUM_OF_SQUARES && c >= 0 && c < NUM_OF_SQUARES) {
+			if (!board[r][c].isPulsing()) {
+				board[r][c].pulseDown(pulsePower);
 			}
 		}
 	}
