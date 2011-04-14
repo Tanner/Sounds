@@ -18,6 +18,8 @@ public class Square extends JPanel implements MouseListener {
 	private int power, pulse;
 	private int row, column;
 	
+	private int sleepUntilCycle;
+	
 	private PulseDelegate pulseDelegate;
 	
 	public Square(int r, int c) {
@@ -33,6 +35,8 @@ public class Square extends JPanel implements MouseListener {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+		System.out.println("("+column+", "+row+") - Painting!");
 		
 		//Update the power color
 		int red = (int)scale(power + pulse, 0, MAX_POWER, defaultColor.getRed(), activeColor.getRed());
@@ -59,6 +63,7 @@ public class Square extends JPanel implements MouseListener {
 	
 	public void mouseReleased(MouseEvent arg0) {
 		updatePower();
+		System.out.println("------------ ("+column+", "+row+") - Mouse Released");
 		pulsing = true;
 		pulseUp = true;
 		charging = false;
@@ -66,7 +71,7 @@ public class Square extends JPanel implements MouseListener {
 	
 	public void updatePower() {
 		power = (int)scale(timerCycles, 0, BoardPanel.CYCLE_DURATION, 0, MAX_POWER);
-		repaint();
+//		repaint();
 	}
 	
 	public void pulse() {
@@ -99,6 +104,12 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public void timerFired() {
+		if (sleepUntilCycle > 0 && sleepUntilCycle == timerCycles) {
+			System.out.println("------------ ("+column+", "+row+") - Awake!");
+			pulseDelegate.pulseOccurred(this);
+			sleepUntilCycle = 0;
+		}
+		
 		timerCycles++;
 		
 		if (charging) {
@@ -115,7 +126,7 @@ public class Square extends JPanel implements MouseListener {
 		pulsing = true;
 		pulseUp = false;
 		
-		pulseDelegate.pulseOccurred(this);
+		sleepUntilCycle = timerCycles + 2;
 	}
 	
 	private static double scale(double current, double currentMin, double currentMax, double targetMin, double targetMax) {

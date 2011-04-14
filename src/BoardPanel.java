@@ -38,12 +38,14 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == timer) {
+			System.out.println("------------ Timer fired!");
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
 					board[r][c].timerFired();
 				}
 			}
-			
+
+			System.out.println("------------ Timer painting!");
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
 					board[r][c].repaint();
@@ -56,6 +58,15 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		int r = source.getRow();
 		int c = source.getColumn();
 		
-		board[r][c + 1].pulseDown(source.getPower());
+		int pulsePower = source.getPower() + source.getPulse();
+		pulsePower -= pulsePower * PULSE_DECAY;
+		
+		System.out.println("------------ Pulse Occurred - ("+c+", "+r+") pow: "+pulsePower);
+		
+		if (pulsePower > 0) {
+			if (c + 1 < NUM_OF_SQUARES) {
+				board[r][c + 1].pulseDown(pulsePower);
+			}
+		}
 	}
 }
