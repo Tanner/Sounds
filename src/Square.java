@@ -104,7 +104,7 @@ public class Square extends JPanel implements MouseListener {
 	}
 	
 	public void timerFired() {
-		if (sleepUntilCycle > 0 && sleepUntilCycle == timerCycles) {
+		if (isAwake()) {
 			if (BoardPanel.DEBUG) System.out.println("------------ ("+column+", "+row+") - Awake!");
 			pulseDelegate.pulseOccurred(this);
 			sleepUntilCycle = 0;
@@ -169,5 +169,15 @@ public class Square extends JPanel implements MouseListener {
 	
 	public boolean isPulsing() {
 		return pulsing;
+	}
+	
+	public boolean isAwake() {
+		if (sleepUntilCycle > 0 && sleepUntilCycle == timerCycles) {
+			return true;
+		} else if (sleepUntilCycle == 0) {
+			return true;
+		}
+		
+		return false;
 	}
 }

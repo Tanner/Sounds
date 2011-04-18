@@ -52,7 +52,7 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 			if (DEBUG) System.out.println("------------ Timer painting!");
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
-					board[r][c].repaint();
+					if (board[r][c].isAwake()) board[r][c].repaint();
 				}
 			}
 		}
