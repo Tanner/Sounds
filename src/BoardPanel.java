@@ -52,7 +52,7 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 			if (DEBUG) System.out.println("------------ Timer painting!");
 			for (int r = 0; r < NUM_OF_SQUARES; r++) {
 				for (int c = 0; c < NUM_OF_SQUARES; c++) {
-					if (board[r][c].isAwake()) board[r][c].repaint();
+					board[r][c].repaint();
 				}
 			}
 		}
@@ -62,29 +62,31 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		int r = source.getRow();
 		int c = source.getColumn();
 		
-		int pulsePower = source.getPower() + source.getPulse();
+		int pulsePower = (source.getPower() + source.getPulse());
 		pulsePower -= pulsePower * PULSE_DECAY;
+		
+		int sleepUntilCycle = source.getTimerCycles() + 2;
 		
 		if (DEBUG) System.out.println("------------ Pulse Occurred - ("+c+", "+r+") pow: "+pulsePower);
 		
 		if (pulsePower > 0) {
-			doPulse(r, c + 1, pulsePower);
-			doPulse(r, c - 1, pulsePower);
-//			doPulse(r + 1, c, pulsePower);
-//			doPulse(r - 1, c, pulsePower);
-//			doPulse(r + 1, c - 1, pulsePower);
-//			doPulse(r - 1, c + 1, pulsePower);
-			
+			doPulse(r, c + 1, pulsePower, sleepUntilCycle);
+			doPulse(r, c - 1, pulsePower, sleepUntilCycle);
+//			doPulse(r + 1, c, pulsePower, sleepUntilCycle);
+//			doPulse(r - 1, c, pulsePower, sleepUntilCycle);
+//			doPulse(r + 1, c - 1, pulsePower, sleepUntilCycle);
+//			doPulse(r - 1, c + 1, pulsePower, sleepUntilCycle);
+//			
 			//Corner
-//			doPulse(r + 1, c + 1, pulsePower);
-//			doPulse(r - 1, c - 1, pulsePower);
+//			doPulse(r + 1, c + 1, pulsePower, sleepUntilCycle);
+//			doPulse(r - 1, c - 1, pulsePower, sleepUntilCycle);
 		}
 	}
 	
-	public void doPulse(int r, int c, int pulsePower) {
+	public void doPulse(int r, int c, int pulsePower, int sleepUntilCycle) {
 		if (r >= 0 && r < NUM_OF_SQUARES && c >= 0 && c < NUM_OF_SQUARES) {
 			if (!board[r][c].isPulsing()) {
-				board[r][c].pulseDown(pulsePower);
+				board[r][c].pulseDown(pulsePower, sleepUntilCycle);
 			}
 		}
 	}

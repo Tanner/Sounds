@@ -48,6 +48,13 @@ public class Square extends JPanel implements MouseListener {
 		if (blue > 255) blue = 255; else if (blue < 0) blue = 0;
 		
 		setBackground(new Color(red, green, blue));
+		
+		if (BoardPanel.DEBUG) {
+			g.setColor(Color.GREEN);
+			g.drawString((isAwake()?"A":"S")+""+(isAlive()?"A":"D")+""+timerCycles, 0, getHeight());
+		}
+		g.setColor(Color.GREEN);
+		g.drawString(""+(power + pulse), 0, getHeight());
 	}
 
 	public void mouseClicked(MouseEvent arg0) { }
@@ -121,12 +128,12 @@ public class Square extends JPanel implements MouseListener {
 		}
 	}
 	
-	public void pulseDown(int pulse) {
+	public void pulseDown(int pulse, int sleepUntilCycle) {
 		this.pulse = pulse;
 		pulsing = true;
 		pulseUp = false;
 		
-		sleepUntilCycle = timerCycles + 2;
+		this.sleepUntilCycle = sleepUntilCycle;
 	}
 	
 	private static double scale(double current, double currentMin, double currentMax, double targetMin, double targetMax) {
@@ -187,5 +194,9 @@ public class Square extends JPanel implements MouseListener {
 		}
 		
 		return false;
+	}
+	
+	public int getTimerCycles() {
+		return timerCycles;
 	}
 }
