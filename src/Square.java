@@ -90,7 +90,7 @@ public class Square extends JPanel implements MouseListener {
 		}
 				
 		//Hit the max pulse we are allowed, start going down...
-		if (power != 0 && pulse / power > MAX_PULSE_PERCENT) {
+		if (power != 0 && pulse / power > MAX_PULSE_PERCENT && isAwake()) {
 			pulseUp = false;
 			pulseDelegate.pulseOccurred(this);
 		}
@@ -175,6 +175,14 @@ public class Square extends JPanel implements MouseListener {
 		if (sleepUntilCycle > 0 && sleepUntilCycle == timerCycles) {
 			return true;
 		} else if (sleepUntilCycle == 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isAlive() {
+		if (pulse > 0 || power > 0) {
 			return true;
 		}
 		

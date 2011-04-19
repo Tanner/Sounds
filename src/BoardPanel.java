@@ -70,8 +70,8 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		if (pulsePower > 0) {
 			doPulse(r, c + 1, pulsePower);
 			doPulse(r, c - 1, pulsePower);
-			doPulse(r + 1, c, pulsePower);
-			doPulse(r - 1, c, pulsePower);
+//			doPulse(r + 1, c, pulsePower);
+//			doPulse(r - 1, c, pulsePower);
 //			doPulse(r + 1, c - 1, pulsePower);
 //			doPulse(r - 1, c + 1, pulsePower);
 			
