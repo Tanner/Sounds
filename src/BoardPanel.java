@@ -70,22 +70,22 @@ public class BoardPanel extends JPanel implements ActionListener, PulseDelegate 
 		if (DEBUG) System.out.println("------------ Pulse Occurred - ("+c+", "+r+") pow: "+pulsePower);
 		
 		if (pulsePower > 0) {
-			doPulse(r, c + 1, pulsePower, sleepUntilCycle);
-			doPulse(r, c - 1, pulsePower, sleepUntilCycle);
-//			doPulse(r + 1, c, pulsePower, sleepUntilCycle);
-//			doPulse(r - 1, c, pulsePower, sleepUntilCycle);
-//			doPulse(r + 1, c - 1, pulsePower, sleepUntilCycle);
-//			doPulse(r - 1, c + 1, pulsePower, sleepUntilCycle);
+			doPulse(source, r, c + 1, pulsePower, sleepUntilCycle);
+			doPulse(source, r, c - 1, pulsePower, sleepUntilCycle);
+//			doPulse(source, r + 1, c, pulsePower, sleepUntilCycle);
+//			doPulse(source, r - 1, c, pulsePower, sleepUntilCycle);
+//			doPulse(source, r + 1, c - 1, pulsePower, sleepUntilCycle);
+//			doPulse(source, r - 1, c + 1, pulsePower, sleepUntilCycle);
 //			
 			//Corner
-//			doPulse(r + 1, c + 1, pulsePower, sleepUntilCycle);
-//			doPulse(r - 1, c - 1, pulsePower, sleepUntilCycle);
+//			doPulse(source, r + 1, c + 1, pulsePower, sleepUntilCycle);
+//			doPulse(source, r - 1, c - 1, pulsePower, sleepUntilCycle);
 		}
 	}
 	
-	public void doPulse(int r, int c, int pulsePower, int sleepUntilCycle) {
+	public void doPulse(Square source, int r, int c, int pulsePower, int sleepUntilCycle) {
 		if (r >= 0 && r < NUM_OF_SQUARES && c >= 0 && c < NUM_OF_SQUARES) {
-			if (!board[r][c].isPulsing()) {
+			if (!board[r][c].isPulsing() && board[r][c] != source) {
 				board[r][c].pulseDown(pulsePower, sleepUntilCycle);
 			}
 		}
