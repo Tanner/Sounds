@@ -9,6 +9,7 @@ public class Main {
 		frame.getContentPane().add(boardPanel);
 		
 		frame.pack();
+		frame.setResizable(false);
 		frame.setVisible(true);
 	}
 
